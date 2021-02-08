@@ -1,10 +1,13 @@
 {
+  "diagnostic.errorSign": "x",
+  "diagnostic.warningSign": "!",
+  "diagnostic.infoSign": "?",
   "coc.preferences.useQuickfixForLocations": true,
   "suggest.snippetIndicator": "🍦",
   "languageserver": {
     "clojure-lsp": {
       "command": "bash",
-      "args": ["-c", "cd /Users/case/dev/lsp/ && lein run"],
+      "args": ["-c", "clojure-lsp"],
       "filetypes": ["clojure"],
       "rootPatterns": ["project.clj"],
       "additionalSchemes": ["jar", "zipfile"],
