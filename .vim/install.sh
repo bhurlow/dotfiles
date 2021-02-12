@@ -25,6 +25,8 @@ packages=(
  mxw/vim-jsx
  ElmCast/elm-vim
  neoclide/coc.nvim
+ guns/vim-sexp.git
+ tpope/vim-sexp-mappings-for-regular-people.git
 )
 
 for x in "${packages[@]}"
