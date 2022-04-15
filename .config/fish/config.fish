@@ -43,10 +43,10 @@ alias bat 'bat --style=plain --theme gruvbox'
 alias ls 'exa'
 
 function source-env
-	for i in (cat $argv)
-		set arr (echo $i |tr = \n)
-  		set -gx $arr[1] $arr[2]
-	end
+  for i in (cat $argv)
+    set arr (echo $i |tr = \n)
+    set -gx $arr[1] $arr[2]
+  end
 end
 
 alias grd 'git log --oneline master..develop'
