@@ -1,19 +1,23 @@
-
 # disable fish greeting
 set fish_greeting
 
 source ~/.config/fish/creds.fish
 
+alias k kubectl
+
 alias tmux 'env TERM=screen-256color-bce tmux'
+
 alias p pbpaste
 
 alias pprint "bb -e '(clojure.pprint/pprint (clojure.edn/read-string (slurp *in*)))'"
 
 set -x GOPATH /Users/pretzel/code/gocode
+
 set -x PATH /Users/pretzel/bin $PATH
 set -x PATH /Users/pretzel/code/cljtool $PATH
 set -x PATH ~/Library/Python/2.7/bin $PATH
 set -x PATH /Users/pretzel/.deno/bin:$PATH
+set -x PATH /Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.2.0/Contents/Home/bin:$PATH
 set -x PATH $HOME/.cargo/bin:$PATH
 
 # set -x PATH /Users/pretzel/code/graalvm-1.0.0-rc1/Contents/Home/bin $PATH
@@ -22,23 +26,21 @@ set -x PATH $HOME/.cargo/bin:$PATH
 # set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk-14.0.1.jdk/Contents/Home
 # set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home
 # set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk-14.0.1.jdk/Contents/Home
-set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk-15.0.1.jdk/Contents/Home
+# set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk-15.0.1.jdk/Contents/Home
+# set -x JAVA_HOME /Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
+# set -x JAVA_HOME /Library/Java/JavaVirtualMachines/zulu-15.jdk/Contents/Home
+# set -x JAVA_HOME /Library/Java/JavaVirtualMachines/zulu-19.jdk/Contents/Home
+set -x JAVA_HOME /Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home
+
+alias prs 'gh pr list -A bhurlow'
 
 set -x EDITOR vim
 
 alias l 'ls -tr1'
 
+alias bat 'bat --style=plain --theme gruvbox'
+
 alias ls 'exa'
-
-function mysql-shell
-  echo $DB_HOST >&2
-  mysql --silent -h $DB_HOST  -u $DB_USER --password=$DB_PASS $DB_NAME
-end
-
-function mysql-exec 
-  echo $DB_HOST >&2
-  mysql -N --silent -h $DB_HOST  -u $DB_USER --password=$DB_PASS $DB_NAME -e $argv
-end
 
 function source-env
 	for i in (cat $argv)
@@ -75,18 +77,44 @@ alias ga 'git add'
 alias gd 'git diff'
 alias gs 'git status .'
 alias g1 'git log --oneline'
-
 alias cb "git branch | grep '*' | sed 's/\*//g' | cut -d ' ' -f 2"
 
-function de 
-  docker exec -it $argv /bin/bash
+set fish_prompt_pwd_dir_length 0
+
+# Git prompt
+set __fish_git_prompt_showdirtystate 'yes'
+set __fish_git_prompt_showupstream 'yes'
+set __fish_git_prompt_color_branch 242
+set __fish_git_prompt_color_dirtystate FCBC47
+set __fish_git_prompt_color_stagedstate green
+set __fish_git_prompt_color_upstream cyan
+
+# Git Characters
+set __fish_git_prompt_char_dirtystate '*'
+set __fish_git_prompt_char_stagedstate '⇢'
+set __fish_git_prompt_char_upstream_prefix ' '
+set __fish_git_prompt_char_upstream_equal ''
+set __fish_git_prompt_char_upstream_ahead '⇡'
+set __fish_git_prompt_char_upstream_behind '⇣'
+set __fish_git_prompt_char_upstream_diverged '⇡⇣'
+
+function _print_in_color
+  set -l string $argv[1]
+  set -l color  $argv[2]
+
+  set_color $color
+  printf $string
+  set_color normal
 end
 
-function dps
-  docker ps --format '{{.ID}} {{ .Image }}'
+function _prompt_color_for_status
+  if test $argv[1] -eq 0
+    echo magenta
+  else
+    echo red
+  end
 end
 
-function fish_prompt
-  set DIR (basename $PWD)
-  echo -n (pwd) '🥨 > '
-end
+eval (/opt/homebrew/bin/brew shellenv)
+
+starship init fish | source
