@@ -1,25 +1,41 @@
-
+ 
 call plug#begin()
 
+echo "HELLO VIM RC"
+
+Plug 'guns/vim-sexp'
+Plug 'guns/vim-clojure-static'
+
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
+Plug 'tpope/vim-fireplace'
+
+Plug 'junegunn/seoul256.vim'
 Plug 'morhetz/gruvbox'
+
 Plug 'sainnhe/sonokai'
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'guns/vim-sexp'
-Plug 'guns/vim-clojure-static'
+
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
+
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
+Plug 'jparise/vim-graphql'
+
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install --frozen-lockfile --production',
-  \ 'branch': 'release/0.x'
+  \ 'branch': 'release/1.x'
   \ }
+
 Plug 'dag/vim-fish'
+Plug 'mattn/emmet-vim'
 
 call plug#end()
 
@@ -58,6 +74,9 @@ set wildmode=list:longest
 set relativenumber
 set wildignore+=*/tmp/*,*/out/*,*/target/*,*.so,*.swp,*.zip
 
+set ttimeout 
+set ttimeoutlen=0
+
 let mapleader = ","
 let maplocalleader = "f"
 map <buffer> <LocalLeader>A  echo("sup")<CR>
@@ -80,7 +99,8 @@ endfunction
 " switch buffers
 map gn :bn<cr>
 map gp :bp<cr>
-map gd :bd<cr>
+" map gd :bd<cr>
+nnoremap <Leader>b :ls<CR>:b<Space>
 
 nnoremap H ^
 nnoremap L $
@@ -94,7 +114,9 @@ noremap <tab>[ :tabnext <cr>
 noremap <leader>T :tabnew <cr>
 noremap cpc :call Mx(0) <cr>
 
-nnoremap <leader>t :! clear && yarn test-one %:p <cr>
+
+nnoremap <leader>t :! clear && yarn test %:p <cr>
+
 nnoremap <leader>e :! clear && LOG_LEVEL=60 yarn --silent babel-node %:p <cr>
 nnoremap <leader>bb :! clear && bb %:p <cr>
 
@@ -102,42 +124,60 @@ nnoremap <leader>bb :! clear && bb %:p <cr>
 
 let g:sonokai_style = 'atlantis'
 let g:sonokai_better_performance = 1
-colorscheme sonokai
 
+" colorscheme sonokai
+" set background=dark
+
+" colorscheme seoul256-light
+" set background=light
+
+" colo seoul256
+" colo seoul256-light
+
+colorscheme gruvbox
+
+set termguicolors
+
+" set background=light
 set background=dark
+
+let g:seoul256_background = 233
+let g:seoul256_light_background = 256
+
 syntax enable
 syntax on
 set guifont=Inconsolata:h15
 
-hi clear CursorLine
-hi Cursor ctermfg=blue ctermbg=red
-hi Normal guibg=#242932 guifg = #eff0ea
-hi Conditional ctermfg = green
-hi LineNr ctermfg = grey guibg=#242932 guifg=#686767
-hi Function ctermfg = blue guifg=#88c0d0
-hi Identifier ctermfg = blue guifg=#88c0d0
-hi Statement ctermfg = blue guifg=#88c0d0
-hi Statement ctermfg = cyan
-hi Exception ctermfg = green
-hi Special ctermfg = magenta
-hi VertSplit ctermfg = 240 guibg=#242932
-hi TabLineFill ctermfg = 240 guibg=#242932
-hi TabLine ctermfg=Blue ctermbg=Yellow
-hi TabLineSel ctermfg = 240 guibg=#242932
-hi Comment ctermfg = 240
-hi String ctermfg = yellow
-hi jsTemplateString ctermfg = blue
-hi Type ctermfg = blue guifg=#88c0d0
-hi Comment guifg=grey
-hi CocErrorHighlight ctermfg=blue
-hi CocUnderline ctermfg=blue
-hi Pmenu ctermbg=none ctermfg=magenta guibg=magenta
+
+" hi clear CursorLine
+" hi Cursor ctermfg=blue ctermbg=red
+" hi Normal guibg=#242932 guifg = #eff0ea
+" hi Conditional ctermfg = green
+" hi LineNr ctermfg = grey guibg=#242932 guifg=#686767
+" hi Function ctermfg = blue guifg=#88c0d0
+" hi Identifier ctermfg = blue guifg=#88c0d0
+" hi Statement ctermfg = blue guifg=#88c0d0
+" hi Statement ctermfg = cyan
+" hi Exception ctermfg = green
+" hi Special ctermfg = magenta
+" hi VertSplit ctermfg = 240 guibg=#242932
+" hi TabLineFill ctermfg = 240 guibg=#242932
+" hi TabLine ctermfg=Blue ctermbg=Yellow
+" hi TabLineSel ctermfg = 240 guibg=#242932
+" hi Comment ctermfg = 240
+" hi String ctermfg = yellow
+" hi jsTemplateString ctermfg = blue
+" hi Type ctermfg = blue guifg=#88c0d0
+" hi Comment guifg=grey
+" hi CocErrorHighlight ctermfg=blue
+" hi CocUnderline ctermfg=blue
+" hi Pmenu ctermbg=none ctermfg=magenta guibg=magenta
+
 
 " Filetypes
 
 au BufRead,BufNewFile *.edn set syntax=clojure
 au BufRead,BufNewFile Dockerfile set filetype=conf
-autocmd FileType html,php,scss,css,javascript EmmetInstall
 
 " Key Mappings
 
@@ -155,14 +195,23 @@ noremap <leader>r :Require<CR>
 map - :Explore<CR>
 
 " Emmet
-let g:user_emmet_expandabbr_key = '<c-e>'
-let g:use_emmet_complete_tag = 1
-let g:user_emmet_install_global = 0
-let g:user_emmet_settings = {
-\  'javascript' : {
-\      'extends' : 'jsx',
-\  },
-\}
+
+let g:user_emmet_leader_key='<C-e>'
+
+" let g:user_emmet_expandabbr_key = '<c-e>'
+" let g:user_emmet_leader_key='<C-e>'
+" let g:user_emmet_mode='a'
+
+" let g:use_emmet_complete_tag = 1
+" let g:user_emmet_install_global = 0
+" let g:user_emmet_settings = {
+" \  'javascript' : {
+" \      'extends' : 'jsx',
+" \  },
+" \}
+
+" autocmd FileType html,php,scss,css,javascript EmmetInstall
+
 
 " because fish isn't bash compatible
 if &shell =~# 'fish$'
@@ -176,15 +225,23 @@ function! Expand(exp) abort
     return l:result ==# '' ? '' : "file://" . l:result
 endfunction
 
-nmap <leader>gd <Plug>(coc-definition)
-nmap <silent> [l <Plug>(coc-diagnostic-prev)
-nmap <silent> ]l <Plug>(coc-diagnostic-next)
-nmap <leader>M ((<Plug>(sexp_insert_at_list_tail)<cr>
-nmap <leader>g <Plug>(coc-definition)
-nmap <leader>rn <Plug>(coc-rename)
-nmap <leader>rf <Plug>(coc-references)
+
+" autocmd FileType javascript let b:coc_root_patterns = ['.eslintrc.json']
+
+
+" nmap <silent> [l <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]l <Plug>(coc-diagnostic-next)
+" nmap <leader>M ((<Plug>(sexp_insert_at_list_tail)<cr>
+" nmap <leader>g <Plug>(coc-definition)
+" nmap <leader>rn <Plug>(coc-rename)
+" nmap <leader>rf <Plug>(coc-references)
+
 nmap <silent> gd <Plug>(coc-definition)
-inoremap <silent><expr> <c-space> coc#refresh()
+nmap <silent> gr <Plug>(coc-references)
+
+" inoremap <silent><expr> <c-space> coc#refresh()
+
+" nmap <C-c> fireplace#
 
 nnoremap <silent> crcc :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cycle-coll', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> crth :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-first', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
@@ -202,16 +259,22 @@ nnoremap <silent> crcp :call CocRequest('clojure-lsp', 'workspace/executeCommand
 nnoremap <silent> cris :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'inline-symbol', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
 nnoremap <silent> cref :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'extract-function', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Function name: ')]})<CR>
 
+nnoremap <silent> csm :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'sort-map', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> cdf :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'drag-forward', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> cdb :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'drag-backward', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+
 " use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
+inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<TAB>"
+
+" inoremap <silent><expr> <Tab>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<Tab>" :
+"       \ coc#refresh()
 
 
 " Clojure
@@ -251,7 +314,7 @@ function! s:show_documentation()
   endif
 endfunction
 
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+" nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! OpenPortal() 
   let result = fireplace#echo_session_eval("(require 'portal.api) (portal.api/tap) (portal.api/open)")
