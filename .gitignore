@@ -1,0 +1,6 @@
+# see issue, fish auto-complete for git add stalls out
+# https://github.com/fish-shell/fish-shell/issues/8592#issuecomment-1001892331
+# ignore all files and allow the dirs which should be under dotfile version ctrl
+*
+!.gitignore
+!.config/**
