@@ -41,6 +41,9 @@ vim.api.nvim_set_keymap("v", "jk", "<esc>", {noremap = true})
 vim.api.nvim_set_keymap("i", "jk", "<esc>", {noremap = true})
 vim.api.nvim_set_keymap("", "-", ":Explore<CR>", {noremap = true})
 
+vim.keymap.set("n", "<C-p>", require('fzf-lua').files, { desc = "Fzf Files" })
+vim.keymap.set("n", "<C-g>", require('fzf-lua').grep, { })
+
 local map = function(type, key, value)
 	vim.api.nvim_buf_set_keymap(0,type,key,value,{noremap = true, silent = true});
 end

@@ -3,4 +3,5 @@
 # ignore all files and allow the dirs which should be under dotfile version ctrl
 *
 !.gitignore
-!.config/**
+!.config/
+# !.config/**
