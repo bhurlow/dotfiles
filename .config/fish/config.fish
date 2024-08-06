@@ -46,7 +46,7 @@ set -x PATH /Users/pretzel/.deno/bin:$PATH
 set -x PATH $HOME/.cargo/bin:$PATH
 set -x PULUMI_CONFIG_PASSPHRASE_FILE ~/.pulumi/passphrase
 set -x JAVA_HOME /Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
-set -x EDITOR vim
+set -x EDITOR nvim
 
 function source-env
   for i in (cat $argv)

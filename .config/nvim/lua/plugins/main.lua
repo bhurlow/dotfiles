@@ -5,6 +5,24 @@ return {
   { "nvim-treesitter/nvim-treesitter" },
   { "PaterJason/nvim-treesitter-sexp" },
   { "nvim-lua/lsp-status.nvim" },
+  { "hrsh7th/nvim-cmp" },
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "earthly/earthly.vim" },
+  { "prettier/vim-prettier" },
+  { "tpope/vim-unimpaired" },
+  { "hashivim/vim-terraform" },
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",         -- required
+      "sindrets/diffview.nvim",        -- optional - Diff integration
+
+      -- Only one of these is needed, not both.
+      "nvim-telescope/telescope.nvim", -- optional
+      "ibhagwan/fzf-lua",              -- optional
+    },
+    config = true
+  },
   {
     "dstein64/vim-startuptime",
     -- lazy-load on a command
@@ -32,6 +50,14 @@ return {
           --end,
         })
         vim.cmd.colorscheme("tokyonight-moon")
+      end,
+    },
+    {
+      "horanmustaplot/xcarbon.nvim",
+      lazy = false, -- make sure we load this during startup if it is your main colorscheme
+      priority = 1000, -- make sure to load this before all the other start plugins
+      config = function()
+        vim.cmd("colorscheme xcarbon")
       end,
     },
     { "nvim-tree/nvim-web-devicons" },
