@@ -1,5 +1,7 @@
 
+
 vim.g.mapleader = ','
+vim.g.maplocalleader = ','
 
 require "config.lazy"
 require "clojure"
@@ -105,10 +107,26 @@ map('n','<leader>ai','<cmd>lua vim.lsp.buf.incoming_calls()<CR>')
 map('n','<leader>ao','<cmd>lua vim.lsp.buf.outgoing_calls()<CR>')
 
 map('n','gp','<cmd>%!pnpm exec prettier --stdin-filepath %<CR>')
-
 map('n','rg','<cmd>%!cat % | gap<CR>')
  
-vim.keymap.set("n", "gd", '<cmd>lua vim.lsp.buf.definition()<CR>', { desc = "Fzf Files" })
+
+vim.keymap.set("n", "gd", '<cmd>lua vim.lsp.buf.definition()<CR>', { })
+vim.keymap.set("n", "g=", vim.lsp.buf.format, { })
+
+-- vim.keymap.set("n", "<C-w>", 'V)', { })
+
+
+vim.keymap.set("n", "gn", function()
+    local params = {
+      filter = function(a) return a.command.command == 'clean-ns' end,
+      apply = true
+    }
+    vim.lsp.buf.code_action(params)
+end, { })
+
+vim.keymap.set("n", "ga", function()
+    vim.lsp.buf.code_action()
+end, { })
 
 vim.diagnostic.config({
   virtual_text = false

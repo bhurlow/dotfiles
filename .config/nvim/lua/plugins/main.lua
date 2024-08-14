@@ -11,6 +11,7 @@ return {
   { "prettier/vim-prettier" },
   { "tpope/vim-unimpaired" },
   { "hashivim/vim-terraform" },
+  { "Olical/conjure" },
   {
     "NeogitOrg/neogit",
     dependencies = {
